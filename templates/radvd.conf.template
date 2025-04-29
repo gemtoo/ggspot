@@ -1,0 +1,8 @@
+interface eth0 {
+	AdvSendAdvert on;
+	prefix ${YGGDRASIL_SUBNET} {
+		AdvOnLink on;
+		AdvAutonomous on;
+	};
+	route 200::/7 {};
+};

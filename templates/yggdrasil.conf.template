@@ -1,8 +1,6 @@
 {
   "PrivateKey": "${YGGDRASIL_PRIVATE_KEY}",
-  "Peers": [
-  	"${YGGDRASIL_PEERS}"
-  ],
+  "Peers": ${YGGDRASIL_PEERS_JSON_ARRAY},
   "InterfacePeers": {},
   "Listen": [],
   "MulticastInterfaces": [
@@ -10,14 +8,12 @@
       "Regex": ".*",
       "Beacon": true,
       "Listen": true,
-      "Port": 0,
-      "Priority": 0,
       "Password": ""
     }
   ],
   "AllowedPublicKeys": [],
   "IfName": "auto",
   "IfMTU": 65535,
-  "NodeInfoPrivacy": "${YGGDRASIL_NODE_PRIVACY}",
+  "NodeInfoPrivacy": true,
   "NodeInfo": null
 }
