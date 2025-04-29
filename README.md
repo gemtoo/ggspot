@@ -2,7 +2,7 @@
 ## Why this exists?
 To provide Yggdrasil Network capabilities to hardware that cannot natively run Yggdrasil Network software. For example, MikroTik routers.
 ## Prerequisites
-- MikroTik arm64 router with at least 80 MB of free disk space.
+- MikroTik arm64 router with at least 100 MB of free disk space.
 - Raspberry Pi 4 or any `arm64` host for building the container.
 ## Brief instructions for MikroTik
 - On your computer, generate Yggdrasil Network config that will be used for the dockerized router.
