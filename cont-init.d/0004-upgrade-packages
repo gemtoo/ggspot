@@ -1,4 +1,3 @@
 #!/usr/bin/with-contenv sh
 
 /sbin/apk upgrade --no-cache || true
-echo "Upgrade errors in containers are OK."
