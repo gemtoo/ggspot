@@ -9,7 +9,7 @@ To provide Yggdrasil Network capabilities to hardware that cannot natively run Y
 ```
 yggdrasil -genconf -json > /tmp/yggdrasil.conf
 ```
-- Fetch your private key, this will be YGGDRASIL_PRIVATE_KEY in MikroTik Container -> Envs.
+- Fetch your private key, this will be the `YGGDRASIL_PRIVATE_KEY` in MikroTik Container -> Envs.
 ```
 cat /tmp/yggdrasil.conf | jq -M .PrivateKey | tr -d '"'
 ```
@@ -47,3 +47,4 @@ docker save ggspot > ggspot.tar
 - VETH is the `eth0` of a container. Per official [Yggdrasil documentation](https://yggdrasil-network.github.io/configuration.html#advertising-a-prefix), for router advertisements to work, VETH should have its own Yggdrasil address (`302:5b95:731b:5f11::2/64` in this case). Assigning Yggdrasil address to VETH makes Yggdrasil reachable from VETH. But such address is reachable only from within the container. This is why Router Advertisement Daemon is needed inside the container.
 - Accepting Router Advertisements is crucial, because there is no other way to get an Yggdrasil Network address on the interface outside the container. When the RA happens, Yggdrasil address gets auto-configured with SLAAC on the `Bridge_Containers` interface. This is the point where MikroTik gets it's own Yggdrasil address. This is the point where container's Yggdrasil Network is made available externally.
 - To reach Yggdrasil Network hosts from MikroTik, a static route to `200::/7` needs to be configured. In our case `200::/7 via 302:5b95:731b:5f11::2%Bridge_Containers`. VETH address inside the container is used as the default gateway. The gateway scope `%Bridge_Containers` needs to be explicitly specified in the route definition.
+- The `s6-overlay` init inside the container runs `apk upgrade --no-cache` every time the container boots. Therefore, to update software inside the container, only a restart is required.
