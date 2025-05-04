@@ -1,3 +1,0 @@
-#!/usr/bin/with-contenv sh
-
-echo "nameserver 1.1.1.1" > /etc/resolv.conf

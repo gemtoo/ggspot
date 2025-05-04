@@ -41,7 +41,7 @@ docker build -t ggspot .
 docker save ggspot > ggspot.tar
 ```
 - SFTP into MikroTik and put `ggspot.tar` there.
-- Create a container using this archive. Assign VETH from the previous step. In Envs specify YGGDRASIL_PRIVATE_KEY and YGGDRASIL_PEERS (example is in `.env.example`).
+- Create a container using this archive. Assign VETH from the previous step. In Envs specify `YGGDRASIL_PRIVATE_KEY` and `YGGDRASIL_PEERS` (example is in `.env.example`).
 ## Notes
 - In this example, inside the container the router software brings up a `tun0` interface with the main address `202:5b95:731b:5f11:314e:1202:99db:d619`, subnet `302:5b95:731b:5f11::/64` and a route to `200::/7`, a.k.a. Yggdrasil Network. The main address is going to be the default gateway to Yggdrasil, inside the container.
 - VETH is the `eth0` of a container. Per official [Yggdrasil documentation](https://yggdrasil-network.github.io/configuration.html#advertising-a-prefix), for router advertisements to work, VETH should have its own Yggdrasil address (`302:5b95:731b:5f11::2/64` in this case). Assigning Yggdrasil address to VETH makes Yggdrasil reachable from VETH. But such address is reachable only from within the container. This is why Router Advertisement Daemon is needed inside the container.
