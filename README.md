@@ -15,11 +15,11 @@ cat /tmp/yggdrasil.conf | jq -M .PrivateKey | tr -d '"'
 ```
 - Calculate your main Yggdrasil IP from that config. In this example the IP will be `202:5b95:731b:5f11:314e:1202:99db:d619`.
 ```
-yggdrasil -useconffile /etc/yggdrasil.conf -address
+yggdrasil -useconffile /tmp/yggdrasil.conf -address
 ```
 - Calculate your Yggdrasil subnet from the config. Example subnet is `302:5b95:731b:5f11::/64`.
 ```
-yggdrasil -useconffile /etc/yggdrasil.conf -subnet
+yggdrasil -useconffile /tmp/yggdrasil.conf -subnet
 ```
 
 - Setup a bridge with working network using official [MikroTik guide](https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container). In this example, bridge name is `Bridge_Containers` address will be `10.1.90.1/24`.
