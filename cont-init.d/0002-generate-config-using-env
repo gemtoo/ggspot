@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv sh
+YGGDRASIL_TEMPLATE_PATH="/etc/templates/yggdrasil.conf.template"
+RADVD_TEMPLATE_PATH="/etc/templates/radvd.conf.template"
+YGGDRASIL_CONF_PATH="/etc/yggdrasil.conf"
+RADVD_CONF_PATH="/etc/radvd.conf"
+
+export YGGDRASIL_PEERS_JSON_ARRAY=$(jq -M -R 'split(" ")' <<< "${YGGDRASIL_PEERS}")
+/usr/bin/envsubst < "${YGGDRASIL_TEMPLATE_PATH}" | /usr/bin/jq -M > "${YGGDRASIL_CONF_PATH}"
+export YGGDRASIL_SUBNET=$(/usr/bin/yggdrasil -useconffile "${YGGDRASIL_CONF_PATH}" -subnet)
+/usr/bin/envsubst < "${RADVD_TEMPLATE_PATH}" > "${RADVD_CONF_PATH}"

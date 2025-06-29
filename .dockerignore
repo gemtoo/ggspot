@@ -1,0 +1,7 @@
+/docker-compose.yml
+/Dockerfile
+/.env
+/.env.example
+/LICENSE
+/README.md
+/.git

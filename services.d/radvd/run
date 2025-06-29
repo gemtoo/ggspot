@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+if [ ${ENABLE_RADVD} == true ]; then
+    echo "ENABLE_RADVD set to true, starting up RADVD ..."
+    exec 2>&1
+    exec /usr/sbin/radvd --nodaemon
+else
+    echo "ENABLE_RADVD set to false, Yggdrasil prefix won't be advertised ..."
+    sleep infinity
+fi

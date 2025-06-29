@@ -1,0 +1,18 @@
+services:
+  yggdrasil:
+    container_name: yggdrasil
+    image: ${CI_REGISTRY_IMAGE}:${DOCKER_IMAGE_SEMANTIC_TAG}
+    network_mode: host
+    volumes:
+      - /lib/modules:/lib/modules:ro
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - YGGDRASIL_PRIVATE_KEY=${YGGDRASIL_PRIVATE_KEY}
+      - YGGDRASIL_PEERS=${YGGDRASIL_PEERS}
+      - ENABLE_RADVD=${ENABLE_RADVD}
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    restart: always
+    stop_grace_period: 0s
