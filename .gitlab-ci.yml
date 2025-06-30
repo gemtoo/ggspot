@@ -24,17 +24,21 @@ stages:
     BUILDX_CACHE_FLAGS: ""
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - |
+      if [ "$CI_ENVIRONMENT_NAME" = "prod" ]; then
+        echo "$PUB_CI_REGISTRY_PASSWORD" | docker login -u "$PUB_CI_REGISTRY_USER" --password-stdin $PUB_CI_REGISTRY
+      fi
   script:
     - |
       if ! docker buildx inspect cibuilder; then
         docker buildx create --use --name cibuilder
       fi
     - |
-      # Cache flags are needed only for dev environment
-      if [ "$CI_ENVIRONMENT_NAME" = "dev" ]; then
-        BUILDX_CACHE_FLAGS="\
-          --cache-to type=registry,ref=$CI_REGISTRY_IMAGE/cache-image,mode=max,compression=zstd \
-          --cache-from=type=registry,ref=$CI_REGISTRY_IMAGE/cache-image"
+      # docker.io tags added only when the environment is prod
+      if [ "$CI_ENVIRONMENT_NAME" = "prod" ]; then
+        PUB_TAGS="\
+          --tag ${PUB_CI_REGISTRY_IMAGE}:${DOCKER_IMAGE_SEMANTIC_TAG} \
+          --tag ${PUB_CI_REGISTRY_IMAGE}:latest"
       fi
 
       docker buildx build \
@@ -43,12 +47,14 @@ stages:
         --tag ${CI_REGISTRY_IMAGE}:${DOCKER_IMAGE_HASH_TAG} \
         --tag ${CI_REGISTRY_IMAGE}:${DOCKER_IMAGE_SEMANTIC_TAG} \
         --tag ${CI_REGISTRY_IMAGE}:latest \
-        $BUILDX_CACHE_FLAGS \
+        --cache-to type=registry,ref=$CI_REGISTRY_IMAGE/cache-image,mode=max,compression=zstd \
+        --cache-from=type=registry,ref=$CI_REGISTRY_IMAGE/cache-image \
+        $PUB_TAGS \
         .
 
 get_version:
   stage: .pre
-  image: 
+  image:
     name: alpine/git:latest
     entrypoint: [""]
   script:
@@ -62,7 +68,7 @@ get_version:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
       when: always
     - when: never
-  artifacts:  
+  artifacts:
     reports:
       dotenv: build.env
 
@@ -71,8 +77,6 @@ build_and_save_dev:
   environment:
     name: dev
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: always
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
       when: always
     - when: never
